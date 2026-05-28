@@ -1,6 +1,10 @@
-fastapi
-uvicorn
-openai
-python-dotenv
-pypdf
-python-multipart
+# requirements.txt — project-ku venura packages list
+# pip install -r requirements.txt — oru command-la ellame install aagum
+
+openai                  # GPT API call pannuvom
+chromadb                # Vector database — chunks store pannuvom
+pypdf                   # PDF read pannuvom
+langchain               # RAG pipeline build panna helper library
+langchain-openai        # LangChain + OpenAI integration
+langchain-community     # ChromaDB + other integrations
+python-dotenv           # .env file load pannuvom
