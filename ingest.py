@@ -26,7 +26,8 @@ from langchain_openai import OpenAIEmbeddings
 
 from langchain_chroma import Chroma
 
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings
 
 # ChromaDB — vectors store pannra database
 # similarity search support pannudhu
@@ -132,10 +133,16 @@ def split_into_chunks(text):
 def store_in_vectordb(chunks):
 
     embeddings = HuggingFaceEmbeddings(
-        model_name="all-MiniLM-L6-v2"
-        # 100% free, local-a run aagum
-        # First time 80MB download aagum — one time only
+        model_name="all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": True},
+        cache_folder="/tmp/embeddings"  # Render-la /tmp use pannuvom
     )
+    # embeddings = HuggingFaceEmbeddings(
+    #     model_name="all-MiniLM-L6-v2"
+    #     # 100% free, local-a run aagum
+    #     # First time 80MB download aagum — one time only
+    # )
 
     vectorstore = Chroma.from_texts(
         texts=chunks,

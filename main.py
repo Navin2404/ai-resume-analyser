@@ -36,7 +36,8 @@ from pydantic import BaseModel
 # JSON body validate pannuvom automatically
 
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -110,8 +111,16 @@ def create_vectorstore(text):
     )
     chunks = splitter.split_text(text)
 
+    # PANA (heavy model — 500MB+):
+    # embeddings = HuggingFaceEmbeddings(
+    #     model_name="all-MiniLM-L6-v2"
+    # )
+
     embeddings = HuggingFaceEmbeddings(
-        model_name="all-MiniLM-L6-v2"
+        model_name="all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": True},
+        cache_folder="/tmp/embeddings"  # Render-la /tmp use pannuvom
     )
 
     vs = Chroma.from_texts(
