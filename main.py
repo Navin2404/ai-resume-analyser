@@ -177,49 +177,68 @@ def root():
 
 
 # --- Upload Endpoint ---
+# main.py — upload_resume function update pannuvom
+
 @app.post("/upload", response_model=UploadResponse)
 async def upload_resume(file: UploadFile = File(...)):
-    # async — file upload wait panna block vendam
-    # UploadFile — PDF file receive pannuvom
-    # File(...) — required field
 
     global vectorstore
-    # global — function outside irukka variable modify pannuvom
 
-    # PDF file check pannuvom
     if not file.filename.endswith(".pdf"):
         raise HTTPException(
             status_code=400,
-            detail="Only PDF files allowed bro!"
+            detail="Only PDF files allowed!"
         )
-        # 400 — Bad Request error
 
-    # File save pannuvom
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
-        # file.file — uploaded file stream
-        # "wb" — write binary mode
 
-    # Process pannuvom
     text = extract_text_from_pdf(file_path)
 
-    # Old chroma_db delete pannuvom — fresh start
+    # FIX — vectorstore close pannivom first, aprom delete pannuvom
+    if vectorstore is not None:
+        vectorstore = None
+        # None panna — chroma connection release aagum
+
+    # Windows-la file lock release aaga konjam wait pannuvom
+    import time
+    time.sleep(0.5)
+
+    # Now safe-a delete pannalaam
     if os.path.exists("./chroma_db"):
-        shutil.rmtree("./chroma_db")
+        try:
+            shutil.rmtree("./chroma_db")
+        except PermissionError:
+            # Still locked-a? Different folder use pannuvom
+            import uuid
+            chroma_dir = f"./chroma_db_{uuid.uuid4().hex[:8]}"
+        else:
+            chroma_dir = "./chroma_db"
+    else:
+        chroma_dir = "./chroma_db"
 
-    vectorstore = create_vectorstore(text)
-
-    # Chunk count calculate pannuvom
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000, chunk_overlap=100
+    # New vectorstore create pannuvom
+    embeddings = HuggingFaceEmbeddings(
+        model_name="all-MiniLM-L6-v2"
     )
-    chunk_count = len(splitter.split_text(text))
+
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100
+    )
+    chunks = splitter.split_text(text)
+
+    vectorstore = Chroma.from_texts(
+        texts=chunks,
+        embedding=embeddings,
+        persist_directory=chroma_dir
+    )
 
     return UploadResponse(
         message="Resume uploaded and processed successfully!",
         filename=file.filename,
-        chunks=chunk_count
+        chunks=len(chunks)
     )
 
 
