@@ -1,0 +1,12 @@
+# .gitignore — full list
+.env
+__pycache__/
+*.pyc
+chroma_db/
+chroma_db_*/
+uploads/
+.venv/
+venv/
+*.pdf
+node_modules/
+frontend/dist/
