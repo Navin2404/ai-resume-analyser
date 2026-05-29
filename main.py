@@ -116,11 +116,9 @@ def create_vectorstore(text):
     #     model_name="all-MiniLM-L6-v2"
     # )
 
-    embeddings = HuggingFaceEmbeddings(
-        model_name="all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
-        cache_folder="/tmp/embeddings"  # Render-la /tmp use pannuvom
+    # inda maari use panninga-a?
+    embeddings = FastEmbedEmbeddings(
+        model_name="BAAI/bge-small-en-v1.5"
     )
 
     vs = Chroma.from_texts(
