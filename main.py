@@ -44,7 +44,7 @@ app.add_middleware(
     # * — any origin allow pannuvom
     # Vercel deploy aana piragu URL change aagum
     # Development + production rendu-laiyum work aagum
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
