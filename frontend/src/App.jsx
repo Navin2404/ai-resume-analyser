@@ -10,7 +10,7 @@ import {
   Loader2
 } from 'lucide-react';
 
-const API_URL  = "https://ai-resume-analyser-l5a8.onrender.com/";
+const API_URL  = "https://ai-resume-analyser-l5a8.onrender.com";
 
 const SUGGESTED_QUESTIONS = [
   "What are the technical skills?",
