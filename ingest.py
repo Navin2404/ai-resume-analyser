@@ -131,13 +131,12 @@ def split_into_chunks(text):
 
 
 def store_in_vectordb(chunks):
-
-    embeddings = HuggingFaceEmbeddings(
-        model_name="all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
-        cache_folder="/tmp/embeddings"  # Render-la /tmp use pannuvom
+    embeddings = FastEmbedEmbeddings(
+        model_name="BAAI/bge-small-en-v1.5"
+        # Lightweight — 50MB only!
+        # torch venaam, cuda venaam!
     )
+
     # embeddings = HuggingFaceEmbeddings(
     #     model_name="all-MiniLM-L6-v2"
     #     # 100% free, local-a run aagum
@@ -169,7 +168,6 @@ def ingest(pdf_path):
 # ============================================
 # Entry point — direct run aana matrum execute
 # ============================================
-import os
 
 if __name__ == "__main__":
     # Project folder-la irukka first PDF auto-detect pannuvom
