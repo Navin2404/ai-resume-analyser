@@ -77,7 +77,7 @@ function App() {
     formData.append('file', file);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/upload`, {
+      const res = await fetch(`${API_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -124,7 +124,7 @@ function App() {
     setIsLoadingChat(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/chat`, {
+      const res = await fetch(`${API_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
